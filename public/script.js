@@ -32,7 +32,7 @@ document.getElementById('chat-input').addEventListener('keypress', (e) => {
 function joinGame() {
     playerName = document.getElementById('player-name').value.trim();
     let roomId = document.getElementById('room-id').value.trim();
-    
+
     if (!playerName) {
         alert('Please enter your name');
         return;
@@ -43,10 +43,10 @@ function joinGame() {
         roomId = generateRoomId();
         window.history.pushState({}, '', `?room=${roomId}`);
     }
-    
+
     currentRoom = roomId;
     socket.emit('join-room', roomId, playerName);
-    
+
     document.getElementById('join-modal').style.display = 'none';
     document.getElementById('game-container').style.display = 'flex';
 }
@@ -60,7 +60,7 @@ function createGrid() {
     for (let i = 0; i < 100; i++) {
         const cell = document.createElement('div');
         cell.className = 'grid-cell';
-        cell.dataset.position = `${Math.floor(i/10)},${i%10}`;
+        cell.dataset.position = `${Math.floor(i / 10)},${i % 10}`;
         grid.appendChild(cell);
     }
 }
@@ -80,19 +80,19 @@ document.addEventListener('click', (e) => {
 
 // Game state updates
 socket.on('game-state', (state) => {
-    document.getElementById('turn-display').textContent = 
+    document.getElementById('turn-display').textContent =
         `Player Turn: ${state.currentPlayer?.name || '-'}`;
-        
-    document.getElementById('timer').textContent = 
+
+    document.getElementById('timer').textContent =
         `Time left: ${state.timeLeft}s`;
 
     // Update scores
     const scoresDiv = document.getElementById('scores');
-  scoresDiv.innerHTML = state.players.map(player => 
-    `<div>${player.name}: ${player.score}</div>`
-  ).join('');   
+    scoresDiv.innerHTML = state.players.map(player =>
+        `<div><span>${player.name}</span><span class="score">${player.score} points</span></div>`
+    ).join('');
 
-    // Update grid      
+    // Update grid    
     state.grid.forEach((row, x) => {
         row.forEach((letter, y) => {
             const cell = document.querySelector(`[data-position="${x},${y}"]`);
@@ -118,4 +118,4 @@ socket.on('word-highlight', ({ word, cells }) => {
 
 
 // Initialize grid on load
-window.onload = createGrid; 
+window.onload = createGrid;
