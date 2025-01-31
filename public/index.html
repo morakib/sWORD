@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multiplayer Word Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            width: 300px;
+            margin: 100px auto;
+        }
+        #game-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="join-modal" class="modal">
+        <div class="modal-content">
+            <h2>Join Game</h2>
+            <input type="text" id="player-name" placeholder="Your Name">
+            <input type="text" id="room-id" placeholder="Room ID">
+            <button onclick="joinGame()">Join Game</button>
+        </div>
+    </div>
+
+    <div class="container" id="game-container">
+        <div class="game-panel">
+            <div class="game-info">
+                <div id="turn-display">Player Turn: -</div>
+                <div id="timer">Time left: 10s</div>
+            </div>
+            <div class="grid" id="game-grid"></div>
+        </div>
+
+        <div class="sidebar">
+            <div class="scoreboard">
+                <h2>SCOREBOARD</h2>
+                <div id="scores"></div>
+            </div>
+            <div class="chat">
+                <div id="chat-messages"></div>
+                <input type="text" id="chat-input" placeholder="Type Message...">
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
