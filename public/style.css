@@ -118,23 +118,35 @@ body {
     border-radius: 10px;
     padding: 15px;
     border: 2px solid #00b4d8;
-    max-height: 400px; /* Fixed height */
+    max-height: 375px;
+    display: flex;
+    flex-direction: column;
+    touch-action: manipulation; /* Improve touch responsiveness */
 }
 
+#chat-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #00b4d8;
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    position: sticky;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    font-size: 16px; /* Ensure proper mobile keyboard input */
+}
+
+/* Ensure chat messages are scrollable */
 #chat-messages {
+    flex: 1;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     padding: 10px;
     margin-bottom: 15px;
-    min-height: 200px;
-    border: 2px #00b4d8; 
-
-
-
-    max-height: 250px; /* Fixed height */
-    overflow-y: auto; /* Scrollable */
-    display: flex;
-    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 #chat-messages div {
