@@ -3,6 +3,7 @@
 
 <head>
     <title>Multiplayer Word Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
         /* Ensure the modal covers the full viewport */
@@ -84,6 +85,9 @@
                 <div id="timer">Time left: 10s</div>
             </div>
             <div class="grid" id="game-grid"></div>
+            <div class="word-display">
+                Valid Word: <span id="valid-word"></span>
+            </div>
         </div>
 
         <div class="sidebar">
@@ -92,9 +96,9 @@
                 <div id="scores"></div>
             </div>
             <div class="chat">
-                <div class="chat-header"><h4>MESSAGE BOX</h4></div>
+                <div class="chat-header"><h2>MESSAGE BOX</h2></div>
                 <div id="chat-messages"></div>
-                <input type="text" id="chat-input" placeholder="Type Message...">
+                <input type="text" id="chat-input" placeholder="TYPE MESSAGE">
             </div>
         </div>
     </div>
