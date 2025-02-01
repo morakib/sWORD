@@ -1,5 +1,14 @@
     let selectedCell = null;
-
+    const mobileInput = document.createElement('input');
+    mobileInput.type = 'text';
+    mobileInput.style.position = 'absolute';
+    mobileInput.style.opacity = '0';
+    mobileInput.style.height = '0';
+    mobileInput.style.width = '0';
+    mobileInput.style.padding = '0';
+    mobileInput.style.border = 'none';
+    mobileInput.maxLength = 1; // Allow only one character
+    document.body.appendChild(mobileInput);
     // Get room ID from URL
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('room')) {
@@ -67,18 +76,23 @@
         }
     }
 
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('grid-cell') && playerName) {
-            // Remove selection from previously selected cell
-            if (selectedCell) {
-                selectedCell.classList.remove('selected');
-            }
-            
-            // Set new selected cell
-            selectedCell = e.target;
-            selectedCell.classList.add('selected');
+    // Grid click handler
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('grid-cell') && playerName) {
+        // Remove selection from previously selected cell
+        if (selectedCell) {
+            selectedCell.classList.remove('selected');
         }
-    });
+        
+        // Set new selected cell
+        selectedCell = e.target;
+        selectedCell.classList.add('selected');
+
+        // Focus the mobile input to trigger the keyboard
+        mobileInput.value = '';
+        mobileInput.focus();
+    }
+});
 
     // Keyboard input handler
     document.addEventListener('keydown', (e) => {
@@ -98,6 +112,34 @@
         }
     });
 
+    // Mobile input handler
+mobileInput.addEventListener('input', (e) => {
+    if (selectedCell && playerName && /^[a-zA-Z]$/.test(mobileInput.value)) {
+        const letter = mobileInput.value.toUpperCase();
+        
+        // Emit the letter-placed event
+        socket.emit('letter-placed', {
+            position: selectedCell.dataset.position,
+            letter: letter
+        });
+
+        // Update the cell visually
+        selectedCell.textContent = letter;
+        selectedCell.classList.remove('selected');
+        selectedCell = null;
+
+        // Blur the input to hide the keyboard
+        mobileInput.blur();
+    }
+});
+
+// Handle mobile input blur
+mobileInput.addEventListener('blur', () => {
+    if (selectedCell) {
+        selectedCell.classList.remove('selected');
+        selectedCell = null;
+    }
+});
 
     // Modify the game-state event handler
     socket.on('game-state', (state) => {
