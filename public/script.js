@@ -9,7 +9,7 @@ let currentRoom = null;
 let playerName = null;
 
 // Show join modal initially
-document.getElementById('join-modal').style.display = 'block';
+document.getElementById('join-modal').style.display = 'flex';
 
 // Chat message handler
 socket.on('chat-message', ({ name, message }) => {
@@ -78,19 +78,26 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Game state updates
+
+// Modify the game-state event handler
 socket.on('game-state', (state) => {
+    // Update turn display
     document.getElementById('turn-display').textContent =
         `Player Turn: ${state.currentPlayer?.name || '-'}`;
 
+    // Update timer
     document.getElementById('timer').textContent =
         `Time left: ${state.timeLeft}s`;
 
-    // Update scores
+    // Update scores with (you) indicator
     const scoresDiv = document.getElementById('scores');
-    scoresDiv.innerHTML = state.players.map(player =>
-        `<div><span>${player.name}</span><span class="score">${player.score} points</span></div>`
-    ).join('');
+    scoresDiv.innerHTML = state.players.map(player => {
+        const isYou = player.id === socket.id;
+        return `<div>
+            <span>${player.name}${isYou ? ' (you)' : ''}</span>
+            <span class="score">${player.score} points</span>
+        </div>`;
+    }).join('');
 
     // Update grid    
     state.grid.forEach((row, x) => {
@@ -106,16 +113,24 @@ socket.on('game-state', (state) => {
 });
 
 
-socket.on('word-highlight', ({ word, cells }) => {
-    cells.forEach(({ x, y }) => {
-        const cell = document.querySelector(`.grid-cell[data-position="${x},${y}"]`);
+socket.on('word-highlight', ({ word, positions }) => {
+    // Display the valid word
+    const wordElement = document.getElementById('valid-word');
+    wordElement.textContent = word.toUpperCase();
+    
+    // Optional: Add animation
+    wordElement.classList.add('word-flash');
+    setTimeout(() => wordElement.classList.remove('word-flash'), 1000);
+
+    // Existing highlight code
+    positions.forEach(({ x, y }) => {
+        const cell = document.querySelector(`[data-position="${x},${y}"]`);
         if (cell) {
             cell.classList.add('word-found');
-            setTimeout(() => cell.classList.remove('word-found'), 1500); // Remove glow after 1.5s
+            setTimeout(() => cell.classList.remove('word-found'), 1500);
         }
     });
 });
-
 
 // Initialize grid on load
 window.onload = createGrid;
