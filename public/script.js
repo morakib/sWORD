@@ -1,5 +1,21 @@
     let selectedCell = null;
     const mobileInput = document.createElement('input');
+    // Chat input handler
+const chatInput = document.getElementById('chat-input');
+chatInput.addEventListener('focus', () => {
+    // Ensure the input is visible when focused
+    chatInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const message = e.target.value.trim();
+        if (message) {
+            socket.emit('chat-message', message);
+            e.target.value = '';
+        }
+    }
+});
+
     mobileInput.type = 'text';
     mobileInput.style.position = 'absolute';
     mobileInput.style.opacity = '0';
@@ -39,6 +55,10 @@
             }
         }
     });
+    document.getElementById('chat-messages').addEventListener('click', () => {
+        chatInput.focus();
+    });
+    
 
     function joinGame() {
         playerName = document.getElementById('player-name').value.trim();
